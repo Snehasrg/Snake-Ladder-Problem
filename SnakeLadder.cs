@@ -10,25 +10,88 @@ namespace SnakeLadderProblem
     {
         public static void GameStart()
         {
-            int position = 0;
-            Random random = new Random();
-            int die = random.Next(1, 7);
-            int option = random.Next(3);
-            const int NoPlay = 0;
-            const int ladder = 1;
-            const int snake = 2;
-            switch (option)
+            int num;
+            int START_POSITION = 0;
+            int END_POSITION = 100;
+            int playerPosition = 0;
+            int previousPlayerPosition = 0;
+            int updatedPlayerPosition = 0;
+            int countDiceRoll = 0;
+
+            void rollDice()
             {
-                case NoPlay:
-                    break;
-                case ladder:
-                    position = die;
-                    break;
-                case snake:
-                    position = position - die;
-                    break;
+                countDiceRoll = (countDiceRoll + 1);
+                Random random = new Random();
+                num = random.Next(6);
+                option();
             }
-            Console.WriteLine("die: " + die + " option : " + option + " position : " + position);
+            void option()
+            {
+                int NO_PLAY_OPTION = 0;
+                int LADDER_OPTION = 1;
+                int SNAKE_OPTION = 2;
+                Random R = new Random();
+                int select_option = R.Next(3);
+
+                if (select_option == NO_PLAY_OPTION)
+                {
+                    noPlay();
+                }
+                else if (select_option == LADDER_OPTION)
+                {
+                    ladder();
+                }
+                else
+                {
+                    snake();
+                }
+            }
+
+            void noPlay()
+            {
+                playerPosition = previousPlayerPosition;
+            }
+
+            void ladder()
+            {
+                updatedPlayerPosition = (previousPlayerPosition + num);
+                if (updatedPlayerPosition > END_POSITION)
+                {
+                    playerPosition = previousPlayerPosition;
+                }
+                else if (updatedPlayerPosition == END_POSITION)
+                {
+                    playerPosition = END_POSITION;
+                }
+                else
+                {
+                    playerPosition = updatedPlayerPosition;
+                }
+
+                previousPlayerPosition = playerPosition;
+            }
+
+            void snake()
+            {
+                updatedPlayerPosition = (previousPlayerPosition - num);
+                if (updatedPlayerPosition < START_POSITION)
+                {
+                    playerPosition = START_POSITION;
+                }
+                else
+                {
+                    playerPosition = updatedPlayerPosition;
+                }
+
+                previousPlayerPosition = playerPosition;
+            }
+
+            while (playerPosition >= START_POSITION && playerPosition < END_POSITION)
+            {
+                rollDice();
+                Console.WriteLine("Position After Every Roll Dice :-  " + playerPosition);
+            }
+            Console.WriteLine("Total Number Of Dice Roll :- " + countDiceRoll);
         }
     }
 }
