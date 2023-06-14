@@ -15,6 +15,10 @@ namespace SnakeLadderProblem
 
             player1 = position;
             Console.WriteLine("Player 1 position is " + player1);
+
+            Random random = new Random();
+            int dice = random.Next(6);
+            Console.WriteLine("Player 1 roll die and get position " + dice);
         }
     }
 }
