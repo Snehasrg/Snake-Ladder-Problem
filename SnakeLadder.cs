@@ -10,96 +10,126 @@ namespace SnakeLadderProblem
     {
         public static void GameStart()
         {
-            int position = 0;
-            int currentPosition = 0;
-            int endPosition = 100;
-            int startposition = 0;
-            const int NoPlay = 0;
-            const int ladder = 1;
-            const int snake = 2;
-            int temp = 0;
-            int flag1 = 0;
-            int flag2 = 0;
-            int resultflag = 0;
-            while (currentPosition < endPosition)
+            // Constant
+            int num;
+            int select_option;
+            int START_POSITION = 0;
+            int END_POSITION = 100;
+            int NO_PLAY_OPTION = 0;
+            int LADDER_OPTION = 1;
+            int SNAKE_OPTION = 2;
+
+            //Variables
+            int playerPosition = 0;
+            int previousPlayerPosition = 0;
+            int updatedPlayerPosition = 0;
+            int countDiceRoll = 0;
+            int playerOnePosition = 0;
+            int playerTwoPosition = 0;
+
+            //Function for rolling dice
+            void rollDice()
             {
-
+                countDiceRoll = (countDiceRoll + 1);
                 Random random = new Random();
-                int die = random.Next(1, 7);
-                flag1++;
-                int prop = random.Next(3);
-                switch (prop)
+                num = random.Next(6);
+                option();
+            }
+            //FUNCTION FOR SELECT OPTION NO PLAY, LADDER AND SNAKE
+            void option()
+            {
+                Random R = new Random();
+                select_option = R.Next(3);
+
+                if (select_option == NO_PLAY_OPTION)
                 {
-                    case NoPlay:
-                        position = 0;
-                        break;
-                    case ladder:
-                        position = die;
-                        break;
-                    case snake:
-                        if (currentPosition > 0)
-                        {
-                            position = 0;
-                            currentPosition = currentPosition - die;
-                            if (currentPosition < 0)
-                            {
-                                currentPosition = startposition;
-                            }
-                        }
-                        else
-                        {
-                            currentPosition = startposition;
-                        }
-                        break;
+                    noPlay();
                 }
-
-                currentPosition += (position);
-                if (currentPosition <= 100)
+                else if (select_option == LADDER_OPTION)
                 {
-                    Console.WriteLine("die : " + die + " option : " + prop + " position : " + currentPosition);
-                    temp = currentPosition;
+                    ladder();
                 }
-
-                if (endPosition < currentPosition)
+                else
                 {
-                    while (temp < endPosition)
-                    {
-                        Random random1 = new Random();
-                        int die1 = random.Next(1, 7);
-                        flag2++;
-                        int prop1 = random.Next(3);
-                        switch (prop1)
-                        {
-                            case NoPlay:
-                                position = 0;
-                                break;
-                            case ladder:
-                                if (temp + die1 == endPosition)
-                                {
-                                    position = die1;
-                                }
-                                else
-                                {
-                                    position = 0;
-                                }
-                                break;
-                            case snake:
-                                position = 0;
-                                break;
-                        }
-                        temp += (position);
-                        if (temp == endPosition)
-                        {
-                            Console.WriteLine("die : " + die1 + " option : " + prop1 + " position : " + temp);
-                        }
-                    }
-
+                    snake();
                 }
             }
-            Console.WriteLine("Dice rolled to reach win : " + flag1);
-            Console.WriteLine("Dice rolled to reach exact win : " + flag2);
-            resultflag = flag1 + flag2;
-            Console.WriteLine("The number of times dice rolled : " + resultflag);
+            //FUNCTION FOR NO PLAY
+            void noPlay()
+            {
+                playerPosition = previousPlayerPosition;
+            }
+            //FUNCTION FOR LADDER
+            void ladder()
+            {
+                updatedPlayerPosition = (previousPlayerPosition + num);
+                if (updatedPlayerPosition > END_POSITION)
+                {
+                    playerPosition = previousPlayerPosition;
+                }
+                else if (updatedPlayerPosition == END_POSITION)
+                {
+                    playerPosition = END_POSITION;
+                }
+                else
+                {
+                    playerPosition = updatedPlayerPosition;
+                }
+
+                previousPlayerPosition = playerPosition;
+            }
+            // FUNCTION FOR SNAKE
+            void snake()
+            {
+                updatedPlayerPosition = (previousPlayerPosition - num);
+                if (updatedPlayerPosition < START_POSITION)
+                {
+                    playerPosition = START_POSITION;
+                }
+                else
+                {
+                    playerPosition = updatedPlayerPosition;
+                }
+
+                previousPlayerPosition = playerPosition;
+            }
+            //FUNCTION FOR PLAYER ONE
+            void playerOne()
+            {
+                rollDice();
+            }
+            //FUNCTION FOR PLAYER TWO
+            void playerTwo()
+            {
+                rollDice();
+            }
+
+            while (playerPosition >= START_POSITION && playerPosition < END_POSITION)
+            {
+                playerOne();
+                if (select_option == LADDER_OPTION)
+                {
+                    playerOne();
+                }
+                playerOnePosition = playerPosition;
+                playerPosition = playerTwoPosition;
+                Console.WriteLine("Player One,Position After Every Roll Dice :-  " + playerOnePosition);
+                if (playerOnePosition == END_POSITION)
+                {
+                    Console.WriteLine(".........*** Player One Win ***........");
+                    break;
+                }
+                playerTwo();
+                playerTwoPosition = playerPosition;
+                playerPosition = playerOnePosition;
+                Console.WriteLine("Player Two,Position After Every Roll Dice :-  " + playerTwoPosition);
+                if (playerTwoPosition == END_POSITION)
+                {
+                    Console.WriteLine(".........*** Player Two Win ***........");
+                    break;
+                }
+            }
+            Console.WriteLine("Total Number Of Dice Roll :- " + countDiceRoll);
         }
     }
 }
