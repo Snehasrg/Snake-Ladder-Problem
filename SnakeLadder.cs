@@ -11,14 +11,24 @@ namespace SnakeLadderProblem
         public static void GameStart()
         {
             int position = 0;
-            int player1;
-
-            player1 = position;
-            Console.WriteLine("Player 1 position is " + player1);
-
             Random random = new Random();
-            int dice = random.Next(6);
-            Console.WriteLine("Player 1 roll die and get position " + dice);
+            int die = random.Next(1, 7);
+            int option = random.Next(3);
+            const int NoPlay = 0;
+            const int ladder = 1;
+            const int snake = 2;
+            switch (option)
+            {
+                case NoPlay:
+                    break;
+                case ladder:
+                    position = die;
+                    break;
+                case snake:
+                    position = position - die;
+                    break;
+            }
+            Console.WriteLine("die: " + die + " option : " + option + " position : " + position);
         }
     }
 }
